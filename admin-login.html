@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Herbique</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { background: linear-gradient(135deg, #0e1c0e 0%, #1a3a1a 50%, #162e2e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.admin-card { background: #fff; border-radius: 24px; padding: 44px 40px; width: 100%; max-width: 400px; box-shadow: 0 24px 80px rgba(0,0,0,.4); }
+.admin-logo { text-align: center; margin-bottom: 28px; }
+.admin-logo-icon { width: 60px; height: 60px; background: var(--green); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; }
+.admin-logo h1 { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 2px; }
+.admin-logo p { font-size: 12px; color: var(--muted); }
+.admin-badge { display: inline-block; background: #fff3cd; color: #856404; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 50px; margin-bottom: 22px; text-transform: uppercase; letter-spacing: 1px; }
+.demo-box { background: var(--green-light); border-radius: 12px; padding: 12px 14px; margin-bottom: 22px; font-size: 12px; }
+.demo-box strong { color: var(--green-dark); display: block; margin-bottom: 5px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.demo-row { display: flex; justify-content: space-between; color: var(--dark); font-weight: 500; margin-bottom: 3px; }
+.admin-btn { width: 100%; padding: 14px; background: var(--dark); color: #fff; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all .25s; margin-top: 6px; }
+.admin-btn:hover { background: #2d4a2d; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.back-link { text-align: center; margin-top: 18px; font-size: 12px; color: var(--muted); }
+.back-link a { color: var(--green); font-weight: 600; }
+.pass-wrap { position: relative; }
+.pass-wrap input { padding-right: 44px; }
+.pass-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 15px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="admin-card">
+  <div class="admin-logo">
+    <div class="admin-logo-icon">🌿</div>
+    <h1>Herbique Admin</h1>
+    <p>Sign in to manage your store</p>
+  </div>
+  <div style="text-align:center"><span class="admin-badge">🔒 Admin Access Only</span></div>
+
+  <div class="demo-box">
+    <strong>Demo Credentials</strong>
+    <div class="demo-row"><span>Email:</span><span>admin@herbique.com</span></div>
+    <div class="demo-row"><span>Password:</span><span>password</span></div>
+  </div>
+
+  <div class="form-group">
+    <label>Email Address</label>
+    <input type="email" id="adminEmail" value="admin@herbique.com" placeholder="admin@herbique.com">
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <div class="pass-wrap">
+      <input type="password" id="adminPass" value="password" placeholder="••••••••">
+      <button class="pass-toggle" onclick="togglePass()">👁</button>
+    </div>
+  </div>
+
+  <button class="admin-btn" onclick="doAdminLogin()">Sign In to Dashboard →</button>
+  <div class="back-link"><a href="index.html">← Back to Store</a></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script>
+function togglePass(){const f=document.getElementById('adminPass');f.type=f.type==='password'?'text':'password';}
+function doAdminLogin(){
+  const email=document.getElementById('adminEmail').value;
+  const pass=document.getElementById('adminPass').value;
+  if(email==='admin@herbique.com'&&pass==='password'){
+    localStorage.setItem('hq_admin','true');
+    showToast('✅ Admin login successful!');
+    setTimeout(()=>window.location='admin-dashboard.html',1100);
+  } else {
+    showToast('❌ Invalid credentials');
+  }
+}
+</script>
+</body>
+</html>
