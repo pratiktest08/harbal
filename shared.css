@@ -113,7 +113,7 @@ input, select, textarea { font-family: 'Poppins', sans-serif; }
 }
 
 /* ── REVEAL ANIMATION ─────────────────────────────────────── */
-.reveal { opacity: 0; transform: translateY(22px); transition: opacity .5s ease, transform .5s ease; }
+.reveal { transform: translateY(22px); transition: opacity .5s ease, transform .5s ease; }
 .reveal.revealed { opacity: 1; transform: translateY(0); }
 
 /* ── FOOTER ───────────────────────────────────────────────── */
