@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Herbique</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-header { background: linear-gradient(135deg, #edf9e3, #fff, #e3f4fc); padding: 44px 5%; border-bottom: 1px solid var(--border); }
+.page-header h1 { font-size: 2rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+.page-header p { color: var(--muted); font-size: 14px; }
+.breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 12px; display: flex; gap: 6px; align-items: center; }
+.breadcrumb a { color: var(--muted); transition: color .2s; } .breadcrumb a:hover { color: var(--green); }
+
+.shop-layout { display: grid; grid-template-columns: 260px 1fr; gap: 28px; padding: 32px 5%; max-width: 1400px; margin: 0 auto; }
+
+/* SIDEBAR */
+.sidebar { }
+.filter-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 14px; }
+.filter-box-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--dark); margin-bottom: 14px; display: flex; justify-content: space-between; cursor: pointer; user-select: none; }
+.filter-options { display: flex; flex-direction: column; gap: 9px; }
+.filter-opt { display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 13px; color: var(--text); }
+.filter-opt input[type=radio], .filter-opt input[type=checkbox] { accent-color: var(--green); width: 14px; height: 14px; cursor: pointer; }
+.filter-opt .cnt { margin-left: auto; font-size: 11px; color: var(--muted); background: var(--gray-bg); padding: 1px 7px; border-radius: 50px; }
+.price-slider { margin-top: 6px; }
+.price-slider input[type=range] { width: 100%; accent-color: var(--green); }
+.price-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.clear-btn { width: 100%; padding: 10px; background: none; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .2s; font-family: 'Poppins', sans-serif; }
+.clear-btn:hover { border-color: var(--green); color: var(--green); }
+
+/* ACTIVE FILTER TAGS */
+.active-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; min-height: 28px; }
+.filter-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--green-light); color: var(--green-dark); font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 50px; }
+.filter-tag button { background: none; border: none; cursor: pointer; color: var(--green-dark); font-size: 13px; font-weight: 700; line-height: 1; padding: 0; }
+
+/* PRODUCTS TOP */
+.products-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.results-count { font-size: 13px; color: var(--muted); } .results-count strong { color: var(--dark); font-weight: 700; }
+.sort-select { padding: 9px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-family: 'Poppins', sans-serif; color: var(--text); outline: none; background: #fff; cursor: pointer; }
+.sort-select:focus { border-color: var(--green); }
+
+/* GRID */
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.no-results { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); font-size: 15px; }
+.no-results .nr-icon { font-size: 48px; margin-bottom: 12px; }
+
+@media(max-width:960px){ .shop-layout { grid-template-columns: 1fr; } .sidebar { display: none; } .products-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:540px){ .products-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">🌿</div><span class="nav-logo-text">Herbique</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="products.html" class="active">Shop</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="cart.html">Cart</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-cart">🛒<span class="cart-badge">0</span></a>
+    <a href="login.html" class="btn btn-primary btn-sm">Sign In</a>
+    <div class="burger" id="burger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a><a href="products.html">Shop</a><a href="about.html">About</a><a href="cart.html">Cart</a><a href="login.html">Sign In</a>
+</div>
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Shop</span></div>
+  <h1>All Products</h1>
+  <p>Discover our full range of natural herbal care products</p>
+</div>
+
+<div class="shop-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="filter-box">
+      <div class="filter-box-title">Categories <span id="cat-arrow">▾</span></div>
+      <div class="filter-options" id="catFilters">
+        <label class="filter-opt"><input type="radio" name="cat" value="all" checked> All Products <span class="cnt" id="cnt-all">15</span></label>
+        <label class="filter-opt"><input type="radio" name="cat" value="skincare"> Skin Care <span class="cnt" id="cnt-skincare">7</span></label>
+        <label class="filter-opt"><input type="radio" name="cat" value="haircare"> Hair Care <span class="cnt" id="cnt-haircare">5</span></label>
+        <label class="filter-opt"><input type="radio" name="cat" value="home"> Home Essentials <span class="cnt" id="cnt-home">3</span></label>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <div class="filter-box-title">Price Range</div>
+      <div class="price-slider">
+        <input type="range" id="priceRange" min="100" max="900" value="900" step="50">
+        <div class="price-labels"><span>₹100</span><span>Up to <strong id="priceLabel">₹900</strong></span></div>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <div class="filter-box-title">Minimum Rating</div>
+      <div class="filter-options" id="ratingFilters">
+        <label class="filter-opt"><input type="radio" name="rating" value="0" checked> All Ratings</label>
+        <label class="filter-opt"><input type="radio" name="rating" value="4.5"> ⭐ 4.5+</label>
+        <label class="filter-opt"><input type="radio" name="rating" value="4.7"> ⭐ 4.7+</label>
+        <label class="filter-opt"><input type="radio" name="rating" value="4.9"> ⭐ 4.9 only</label>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <div class="filter-box-title">Availability</div>
+      <div class="filter-options">
+        <label class="filter-opt"><input type="checkbox" id="featuredOnly"> Featured only</label>
+        <label class="filter-opt"><input type="checkbox" id="onSaleOnly"> On sale</label>
+      </div>
+    </div>
+
+    <button class="clear-btn" id="clearFilters">✕ Clear All Filters</button>
+  </aside>
+
+  <!-- PRODUCTS AREA -->
+  <div>
+    <div class="active-tags" id="activeTags"></div>
+    <div class="products-top">
+      <p class="results-count">Showing <strong id="resultCount">15</strong> products</p>
+      <select class="sort-select" id="sortSelect">
+        <option value="featured">Sort: Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="rating">Best Rated</option>
+        <option value="reviews">Most Reviewed</option>
+        <option value="discount">Biggest Discount</option>
+      </select>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script src="products-data.js"></script>
+<script>
+let filters = { cat: 'all', maxPrice: 900, minRating: 0, featuredOnly: false, onSale: false };
+
+function getFilters() {
+  filters.cat = document.querySelector('input[name="cat"]:checked')?.value || 'all';
+  filters.maxPrice = parseInt(document.getElementById('priceRange').value);
+  filters.minRating = parseFloat(document.querySelector('input[name="rating"]:checked')?.value || 0);
+  filters.featuredOnly = document.getElementById('featuredOnly').checked;
+  filters.onSale = document.getElementById('onSaleOnly').checked;
+}
+
+function applySort(arr) {
+  const sort = document.getElementById('sortSelect').value;
+  return [...arr].sort((a, b) => {
+    if (sort === 'price-asc') return a.price - b.price;
+    if (sort === 'price-desc') return b.price - a.price;
+    if (sort === 'rating') return b.rating - a.rating;
+    if (sort === 'reviews') return b.reviews - a.reviews;
+    if (sort === 'discount') return (b.old - b.price) - (a.old - a.price);
+    return b.featured - a.featured; // featured
+  });
+}
+
+function filterProducts() {
+  getFilters();
+  let result = PRODUCTS.filter(p => {
+    if (filters.cat !== 'all' && p.cat !== filters.cat) return false;
+    if (p.price > filters.maxPrice) return false;
+    if (p.rating < filters.minRating) return false;
+    if (filters.featuredOnly && !p.featured) return false;
+    if (filters.onSale && p.old <= p.price) return false;
+    return true;
+  });
+  result = applySort(result);
+  renderProducts(result);
+  renderTags();
+  updateCounts();
+}
+
+function renderProducts(list) {
+  const grid = document.getElementById('productsGrid');
+  document.getElementById('resultCount').textContent = list.length;
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="no-results"><div class="nr-icon">🔍</div><p>No products match your filters.</p><br><button class="btn btn-outline btn-sm" onclick="resetFilters()">Clear Filters</button></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p => renderProductCard(p)).join('');
+  // Re-observe for reveal animation
+  document.querySelectorAll('.reveal:not(.revealed)').forEach(el => {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('revealed');obs.unobserve(e.target);} });
+    }, {threshold:0.08});
+    obs.observe(el);
+  });
+}
+
+function renderTags() {
+  const container = document.getElementById('activeTags');
+  const tags = [];
+  if (filters.cat !== 'all') tags.push({ label: {skincare:'Skin Care',haircare:'Hair Care',home:'Home'}[filters.cat], key: 'cat' });
+  if (filters.maxPrice < 900) tags.push({ label: `Under ₹${filters.maxPrice}`, key: 'price' });
+  if (filters.minRating > 0) tags.push({ label: `${filters.minRating}+ ★`, key: 'rating' });
+  if (filters.featuredOnly) tags.push({ label: 'Featured', key: 'featured' });
+  if (filters.onSale) tags.push({ label: 'On Sale', key: 'sale' });
+  container.innerHTML = tags.map(t => `<span class="filter-tag">${t.label} <button onclick="removeTag('${t.key}')">×</button></span>`).join('');
+}
+
+function removeTag(key) {
+  if (key === 'cat') { document.querySelector('input[name="cat"][value="all"]').checked = true; }
+  if (key === 'price') { document.getElementById('priceRange').value = 900; document.getElementById('priceLabel').textContent = '₹900'; }
+  if (key === 'rating') { document.querySelector('input[name="rating"][value="0"]').checked = true; }
+  if (key === 'featured') { document.getElementById('featuredOnly').checked = false; }
+  if (key === 'sale') { document.getElementById('onSaleOnly').checked = false; }
+  filterProducts();
+}
+
+function resetFilters() {
+  document.querySelector('input[name="cat"][value="all"]').checked = true;
+  document.querySelector('input[name="rating"][value="0"]').checked = true;
+  document.getElementById('priceRange').value = 900;
+  document.getElementById('priceLabel').textContent = '₹900';
+  document.getElementById('featuredOnly').checked = false;
+  document.getElementById('onSaleOnly').checked = false;
+  filterProducts();
+}
+
+function updateCounts() {
+  const counts = { all: PRODUCTS.length, skincare: 0, haircare: 0, home: 0 };
+  PRODUCTS.forEach(p => counts[p.cat]++);
+  Object.keys(counts).forEach(k => {
+    const el = document.getElementById('cnt-' + k);
+    if (el) el.textContent = counts[k];
+  });
+}
+
+// Event listeners
+document.querySelectorAll('input[name="cat"], input[name="rating"]').forEach(r => r.addEventListener('change', filterProducts));
+document.getElementById('priceRange').addEventListener('input', e => {
+  document.getElementById('priceLabel').textContent = '₹' + e.target.value;
+  filterProducts();
+});
+document.getElementById('featuredOnly').addEventListener('change', filterProducts);
+document.getElementById('onSaleOnly').addEventListener('change', filterProducts);
+document.getElementById('sortSelect').addEventListener('change', filterProducts);
+document.getElementById('clearFilters').addEventListener('click', resetFilters);
+
+// Handle URL param ?cat=
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat) {
+    const radio = document.querySelector(`input[name="cat"][value="${cat}"]`);
+    if (radio) radio.checked = true;
+  }
+  filterProducts();
+});
+</script>
+</body>
+</html>
